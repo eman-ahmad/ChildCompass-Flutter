@@ -1,6 +1,6 @@
 # childcompass
 
-A new Flutter project.
+A new Flutter project,integrated frontend with backend.
 
 ## Getting Started
 
