@@ -5,15 +5,30 @@ import 'package:childcompass/screeens/parent/child_connection.dart';
 import 'package:childcompass/screeens/parent/email_verification.dart';
 import 'package:childcompass/screeens/parent/parent_login.dart';
 import 'package:childcompass/screeens/parent/parent_registeration.dart';
+import 'package:childcompass/screeens/parent/parent_dashboard.dart';
+import 'package:childcompass/screeens/parent/child_location_map.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../provider/parent_email_provider.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Load environment variables
+  await dotenv.load(fileName: ".env");
+
+  // Initialize Mapbox with the token
+  final token = dotenv.env['MAPBOX_ACCESS_TOKEN'];
+  if (token == null) {
+    throw Exception('MAPBOX_ACCESS_TOKEN not found in .env file');
+  }
+  MapboxOptions.setAccessToken(token);
+
+  print("Mapbox token initialized: ${token.substring(0, 5)}...");
+
   runApp(
-    ProviderScope( // Wrap your app inside ProviderScope
+    ProviderScope(
       child: MyApp(initialRoute: '/onBoardingScreen'),
     ),
   );
@@ -37,6 +52,8 @@ class MyApp extends StatelessWidget {
         '/emailVerification': (context) => EmailVerification(),
         '/childConnection': (context) => ChildConnection(),
         '/childCode': (context) => childCode(),
+        '/parentDashboard': (context) => parentDashboard(),
+        '/childLocationMap': (context) => ParentMapScreen(),
       },
     );
   }

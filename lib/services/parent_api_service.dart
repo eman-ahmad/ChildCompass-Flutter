@@ -60,20 +60,32 @@ class parentApiService {
   }
 
   //LOGIN API
-  Future<Map<String, dynamic>> loginParent(String email, String password) async {
-    final url = Uri.parse(ApiConstants.parentLogin); // API endpoint
+  Future<Map<String, dynamic>?> loginParent(String email, String password) async {
     try {
       final response = await http.post(
-        url,
+        Uri.parse(ApiConstants.parentLogin),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email, "password": password}),
+        body: jsonEncode({
+          "email": email.trim(),
+          "password": password,
+        }),
       );
 
-      return jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        try {
+          return jsonDecode(response.body);
+        } catch (e) {
+          return {"error": "Unexpected error occurred."};
+        }
+      }
     } catch (e) {
-      return {"message": "An error occurred: $e"};
+      print("Error: $e");
+      return {"error": "Network error, please try again later."};
     }
   }
+
 
   //ADD-CHILD API
   Future<Map<String, dynamic>> addChild(String email, String connectionString) async {

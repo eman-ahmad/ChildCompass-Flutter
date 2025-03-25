@@ -241,8 +241,9 @@ class _ChildConnectionState extends ConsumerState<ChildConnection> {
 
       if (result["message"].contains("Child connection string added successfully")) {
         print("Child added successfully!");
+
         if (mounted) {
-          Navigator.pop(context); // ✅ Close the add child screen
+          Navigator.pushNamed(context, '/childLocationMap'); // ✅ Close the add child screen
         }
       }
     }
